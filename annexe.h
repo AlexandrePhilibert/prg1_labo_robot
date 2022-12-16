@@ -1,6 +1,6 @@
 // -----------------------------------------------------------------------------------------------
 // Fichier        : annexe.h
-// Auteur(s)      : POLLEN Lionel & PHILIBERT Alexandre
+// Auteur(s)      : POLLIEN Lionel & PHILIBERT Alexandre
 // Date           : 2022-11-22
 // But            : Fonction permettant de générer un nombre aléatoire entre un min et un max.
 // Modifications  : NIL
@@ -8,7 +8,6 @@
 // Compilateur    : g++ 11.2.0
 // Standard C++   : C++ 20
 // -----------------------------------------------------------------------------------------------
-
 
 #ifndef PRG1_LABO_ROBOT_ANNEXE_H
 #define PRG1_LABO_ROBOT_ANNEXE_H

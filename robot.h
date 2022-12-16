@@ -1,26 +1,33 @@
+// -----------------------------------------------------------------------------------------------
+// Fichier        : robot.cpp
+// Auteur(s)      : POLLIEN Lionel & PHILIBERT Alexandre
+// Date           : 2022-11-22
+// But            :
+// Modifications  : NIL
+// Remarque(s)    :
+// Compilateur    : g++ 11.2.0
+// Standard C++   : C++ 20
+// -----------------------------------------------------------------------------------------------
+
 #ifndef PRG1_LABO_ROBOT_ROBOT_H
 #define PRG1_LABO_ROBOT_ROBOT_H
 
-enum class  Direction   {DROITE, GAUCHE, HAUT, BAS};
+#include <vector>
+
+#include "position.h"
 
 class Robot{
 public :
-   Robot(int numero, int x, int y);
+   Robot(int numero, const Position& position = Position(0, 0));
 
    int getNumero() const;
-   int getX() const;
-   int getY() const ;
+   Position getPosition() const;
 
-   void setX(int x);
-   void setY(int y);
-
-   //Deplacement
-   void deplacer();
+   void setPosition(const Position& position);
 
 private:
    int numero;
-   int x;
-   int y;
+   Position position;
 };
 
 #endif //PRG1_LABO_ROBOT_ROBOT_H
