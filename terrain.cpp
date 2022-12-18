@@ -2,7 +2,7 @@
 // Fichier        : terrain.cpp
 // Auteur(s)      : POLLIEN Lionel & PHILIBERT Alexandre
 // Date           : 2022-11-22
-// But            : Fonction permettant de générer un nombre aléatoire entre un min et un max.
+// But            : Représentation d'un terrain sur lequel des robots combattent.
 // Modifications  : NIL
 // Remarque(s)    :
 // Compilateur    : g++ 11.2.0
@@ -17,7 +17,21 @@
 
 using namespace std;
 
-Terrain::Terrain(int largeur, int hauteur, const vector<Robot>& robots) : largeur(largeur), hauteur(hauteur), robots(robots) {}
+Terrain::Terrain(int largeur, int hauteur, const vector<Robot>& robots) : largeur(largeur), hauteur(hauteur), robots(robots) {
+   evenements = stringstream();
+
+   positionnerRobots();
+}
+
+void Terrain::positionnerRobots() {
+   vector<Position> positionsDeDepart = vector<Position>();
+   positionsDeDepart.reserve(robots.size());
+
+   for (size_t i = 0; i < robots.size(); ++i) {
+      // TODO Gérer le cas ou 2 positions sont égales
+      positionsDeDepart.push_back(Position::random(largeur, hauteur));
+   }
+}
 
 void Terrain::afficher() const {
    // Affiche le bord supérieur du terrain
@@ -35,31 +49,43 @@ void Terrain::afficher() const {
    cout << string((size_t) this->largeur + 2, '-') << endl;
 }
 
-void Terrain::afficherCase(const Position& position) const {
-   // TODO: Ne pas utiliser ça, car pas vu en classe...
-   vector<Robot>::const_iterator it = find_if(robots.begin(), robots.end(), [position](Robot robot) {
-      return robot.getPosition() == position;
-   });
+void Terrain::afficherEvenements() const {
+   cout << endl << evenements.str() << endl;
+}
 
-   if (it != robots.end()) {
-      cout << it->getNumero();
+vector<Robot>::const_iterator Terrain::robotEnPositon(const Position &position) const {
+   for (vector<Robot>::const_iterator robot = robots.begin(); robot != robots.end(); ++robot) {
+      if (robot->getPosition() == position) {
+         return robot;
+      }
+   }
+
+   return robots.end();
+}
+
+void Terrain::afficherCase(const Position& position) const {
+   vector<Robot>::const_iterator robot = robotEnPositon(position);
+
+   if (robot != robots.end()) {
+      cout << robot->getId();
    } else {
       cout << " ";
    }
 }
 
 void Terrain::prochainTour() {
-   for (vector<Robot>::iterator robot = robots.begin(); robot != robots.end(); ++robot) {
-      // Tirer une des directions possible
-      // Déplacer le robot à cette position
-
-      // Effectuer les combatsRobots de robots
-      this->combatsRobots();
-   }
+   // Un tour est constitué de deux étapes :
+   // - Le déplacement des robots.
+   // - Les combats de robots se situant sur la même position.
+   this->deplacerRobots();
+   this->combatsRobots();
 }
 
 void Terrain::deplacerRobots() {
-
+   for (Robot& robot : robots) {
+      // TODO: Tirer une direction aléatoire
+      robot.deplacer((Direction) 1);
+   }
 }
 
 void Terrain::combatsRobots() {
@@ -71,16 +97,16 @@ void Terrain::combatsRobots() {
    // Mélange l'ordre des robots pour une égalité des chances de victoire de chaque robot lors d'un combatsRobots
    shuffle(robots.begin(), robots.end(), random_device());
 
+   // Compare si les positions de 2 robots sont identiques, dans ce cas, le deuxième robot du vecteur
+   // ayant la même position est supprimé (il a perdu le combat).
    for (vector<Robot>::const_iterator robot1 = robots.begin(); robot1 != robots.end(); ++robot1) {
       for (vector<Robot>::const_iterator robot2 = robot1 + 1; robot2 != robots.end(); ++robot2) {
          if (robot1->getPosition() == robot2->getPosition()) {
-            robots.erase(robot1, robot1 + 1);
+            // Ajout du résultat du combat au flux d'événements
+            evenements << robot1->getId() << " killed " << robot2->getId() << endl;
+
+            robots.erase(robot2, robot2 + 1);
          }
       }
    }
-}
-
-bool Terrain::contient(const Position &position) const {
-   return position.getX() >= 0 && position.getX() < largeur
-          && position.getY() >= 0 && position.getY() < hauteur;
 }

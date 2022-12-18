@@ -24,46 +24,26 @@
 using namespace std;
 
 int main() {
-   /**
-    * Le message d'erreur qui s'affichera lorsque la saisie est hors de l'interval spécifié
-    */
+   // Le message d'erreur qui s'affichera lorsque la saisie est hors de l'interval spécifié
    const string MSG_ERREUR = "/!\\ erreur de saisie ...";
-   /**
-    * La largeur de terrain minimum qui pourra être choisi par l'utilisateur
-    */
+   // La largeur de terrain minimum qui pourra être choisi par l'utilisateur
    const int LARGEUR_TERRAIN_MIN = 10;
-   /**
-    * La largeur de terrain maximum qui pourra être choisi par l'utilisateur
-    */
+   // La largeur de terrain maximum qui pourra être choisi par l'utilisateur
    const int LARGEUR_TERRAIN_MAX = 1000;
-   /**
-    * La hauteur de terrain minimum qui pourra être choisi par l'utilisateur
-    */
+   // La hauteur de terrain minimum qui pourra être choisi par l'utilisateur
    const int HAUTEUR_TERRAIN_MIN = 10;
-   /**
-    * La hauteur de terrain maximum qui pourra être choisi par l'utilisateur
-    */
+   // La hauteur de terrain maximum qui pourra être choisi par l'utilisateur
    const int HAUTEUR_TERRAIN_MAX = 1000;
-   /**
-    * Le nombre de robots minimum qui pourra être choisi par l'utilisateur
-    */
+   // Le nombre de robots minimum qui pourra être choisi par l'utilisateur
    const int NOMBRE_ROBOTS_MIN = 0;
-   /**
-    * Le nombre de robots maximum qui pourra être choisi par l'utilisateur
-    */
+   // Le nombre de robots maximum qui pourra être choisi par l'utilisateur
    const int NOMBRE_ROBOTS_MAX = 9;
 
-   /**
-    * La largeur du terrain saisie par l'utilisateur
-    */
+   // La largeur du terrain saisie par l'utilisateur
    int largeurTerrain;
-   /**
-    * La hauteur du terrain saisie par l'utilisateur
-    */
+   // La hauteur du terrain saisie par l'utilisateur
    int hauteurTerrain;
-   /**
-    * Le nombre de robots saisi par l'utilisateur
-    */
+   // Le nombre de robots saisi par l'utilisateur
    int nombreRobots;
 
    // TODO: Description du programme
@@ -78,22 +58,23 @@ int main() {
    // Saisie du nombre de robots
    nombreRobots = saisie("nbre object", MSG_ERREUR, NOMBRE_ROBOTS_MIN, NOMBRE_ROBOTS_MAX);
 
-   // TODO: Positions de départ
-   vector<Position> positionsDepart = vector<Position>();
-
    vector<Robot> robots = vector<Robot>();
-   for (int i = 1; i <= nombreRobots; ++i) {
-      robots.push_back(Robot(i, Position::random(largeurTerrain, hauteurTerrain)));
+   robots.reserve((size_t) nombreRobots);
+
+   for (size_t i = 0; i < (size_t) nombreRobots; ++i) {
+      robots.push_back(Robot(Position::random(largeurTerrain, hauteurTerrain)));
    }
 
    Terrain terrain(largeurTerrain, hauteurTerrain, robots);
 
    while(robots.size() > 1) {
       terrain.afficher();
+      terrain.afficherEvenements();
 
       // Pause l'exécution pendant 500 millisecondes
       this_thread::sleep_for(500ms);
 
+      // Repris du corrigé présenté en classe du labo tondeuse.
       #ifdef _WIN32
          system("cls");
       #else

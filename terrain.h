@@ -13,6 +13,7 @@
 #define PRG1_LABO_ROBOT_TERRAIN_H
 
 #include <vector>
+#include <sstream>
 
 #include "robot.h"
 
@@ -22,18 +23,33 @@ public:
    Terrain(int largeur = 10, int hauteur = 10, const std::vector<Robot>& robots = std::vector<Robot>());
 
    void afficher() const;
-   bool contient(const Position& position) const;
+   void afficherEvenements() const;
    void prochainTour();
-
 
 private:
    int largeur;
    int hauteur;
 
+   std::stringstream evenements;
+
    void afficherCase(const Position& position) const;
    void combatsRobots();
    void deplacerRobots();
 
+   /**
+    * Positionne les robots sur le terrain de manière aléatoire, aucun robot ne dois avoir la même position
+    * qu'un autre robot.
+    * @throws NIL
+    */
+   void positionnerRobots();
+
+   /**
+    * @param position La position à laquelle un robot est cherchés
+    * @return Un itérateur constant contenant un robot si un robot a été trouvé à la position donnée,
+    * sinon retourne l'itérateur de fin du vecteur de robots
+    * @throws NIL
+    */
+   std::vector<Robot>::const_iterator robotEnPositon(const Position& position) const;
 
    std::vector<Robot> robots;
 };

@@ -16,17 +16,23 @@
 
 #include "position.h"
 
-class Robot{
+class Robot {
 public :
-   Robot(int numero, const Position& position = Position(0, 0));
+   Robot(const Position& position = Position(0, 0));
 
-   int getNumero() const;
-   Position getPosition() const;
+   /**
+    * @throws NIL
+    * @return l'id du robot
+    */
+   int getId() const;
+   const Position& getPosition() const;
 
-   void setPosition(const Position& position);
+   void deplacer(Direction direction);
+
+   static int prochainId;
 
 private:
-   int numero;
+   int id;
    Position position;
 };
 

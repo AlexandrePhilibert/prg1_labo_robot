@@ -9,22 +9,26 @@
 // Standard C++   : C++ 20
 // -----------------------------------------------------------------------------------------------
 
-#include <vector>
-
 #include "robot.h"
 
 using namespace std;
 
-Robot::Robot(int numero, const Position& position) : numero(numero), position(position) {}
+int Robot::prochainId = 0;
 
-int Robot::getNumero() const {
-   return numero;
+Robot::Robot(const Position& position) : position(position) {
+   id = Robot::prochainId;
+   prochainId++;
 }
 
-Position Robot::getPosition() const {
+int Robot::getId() const {
+   return id;
+}
+
+const Position& Robot::getPosition() const {
    return this->position;
 }
 
-void Robot::setPosition(const Position& position) {
-   this->position = position;
+void Robot::deplacer(Direction direction) {
+   // TODO: Utiliser +=
+   this->position = position + direction;
 }

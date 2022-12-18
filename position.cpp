@@ -24,16 +24,30 @@ int Position::getY() const {
    return this->y;
 }
 
-void Position::setX(int x) {
-   this->x = x;
-}
-
-void Position::setY(int y) {
-   this->y = y;
-}
-
 Position Position::random(int xMax, int yMax) {
    return Position(::random(0, xMax), ::random(0, yMax));
+}
+
+Position Position::operator+(Direction direction) const {
+   int x = this->x;
+   int y = this->y;
+
+   switch (direction) {
+      case Direction::HAUT:
+         y--;
+         break;
+      case Direction::DROITE:
+         x++;
+         break;
+      case Direction::BAS:
+         y++;
+         break;
+      case Direction::GAUCHE:
+         x--;
+         break;
+   }
+
+   return Position(x, y);
 }
 
 bool Position::operator==(const Position &position) const {
