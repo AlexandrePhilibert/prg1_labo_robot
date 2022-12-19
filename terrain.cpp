@@ -17,7 +17,9 @@
 
 using namespace std;
 
-Terrain::Terrain(int largeur, int hauteur, const vector<Robot>& robots) : largeur(largeur), hauteur(hauteur), robots(robots) {
+Terrain::Terrain(int largeur, int hauteur, const vector<Robot>& robots) : largeur(largeur),
+                                                                          hauteur(hauteur),
+                                                                          robots(robots) {
    evenements = stringstream();
 }
 

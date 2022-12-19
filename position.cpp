@@ -16,16 +16,8 @@ using namespace std;
 
 Position::Position(int x, int y): x(x), y(y) {}
 
-int Position::getX() const {
-   return this->x;
-}
-
-int Position::getY() const {
-   return this->y;
-}
-
 void Position::unique(vector<Position>::iterator debut, vector<Position>::iterator fin, int xMax, int yMax) {
-   for (vector<Position>::iterator it = debut; debut != fin; ++it) {
+   for (vector<Position>::iterator& it = debut; debut != fin; ++it) {
       Position position = Position::random(xMax, yMax);
 
       if (find(debut, fin, position) == fin) {
