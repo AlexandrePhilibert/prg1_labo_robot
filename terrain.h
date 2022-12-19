@@ -30,18 +30,14 @@ private:
    int largeur;
    int hauteur;
 
+   /**
+    * Les événements sont des actions qui ont été réalisées sur le terrain, par. ex un robot tuant un autre robot
+    */
    std::stringstream evenements;
 
    void afficherCase(const Position& position) const;
    void combatsRobots();
    void deplacerRobots();
-
-   /**
-    * Positionne les robots sur le terrain de manière aléatoire, aucun robot ne dois avoir la même position
-    * qu'un autre robot.
-    * @throws NIL
-    */
-   void positionnerRobots();
 
    /**
     * @param position La position à laquelle un robot est cherchés

@@ -24,6 +24,12 @@
 using namespace std;
 
 int main() {
+   // Le message de saisie de la largeur du terrain
+   const string MSG_SAISIE_LARGEUR = "largeur";
+   // Le message de saisie de la hauteur du terrain
+   const string MSG_SAISIE_HAUTEUR = "hauteur";
+   // Le message de saisie du nombre de robots
+   const string MSG_SAISIE_NOMBRE_ROBOTS = "nbre object";
    // Le message d'erreur qui s'affichera lorsque la saisie est hors de l'interval spécifié
    const string MSG_ERREUR = "/!\\ erreur de saisie ...";
    // La largeur de terrain minimum qui pourra être choisi par l'utilisateur
@@ -50,23 +56,26 @@ int main() {
    cout << "ce programme ..." << endl;
 
    // Saisie de la largeur du terrain
-   largeurTerrain = saisie("largeur", MSG_ERREUR, LARGEUR_TERRAIN_MIN, LARGEUR_TERRAIN_MAX);
-
+   largeurTerrain = saisie(MSG_SAISIE_LARGEUR, MSG_ERREUR, LARGEUR_TERRAIN_MIN, LARGEUR_TERRAIN_MAX);
    // Saisie de la hauteur du terrain
-   hauteurTerrain = saisie("hauteur", MSG_ERREUR, HAUTEUR_TERRAIN_MIN, HAUTEUR_TERRAIN_MAX);
-
+   hauteurTerrain = saisie(MSG_SAISIE_HAUTEUR, MSG_ERREUR, HAUTEUR_TERRAIN_MIN, HAUTEUR_TERRAIN_MAX);
    // Saisie du nombre de robots
-   nombreRobots = saisie("nbre object", MSG_ERREUR, NOMBRE_ROBOTS_MIN, NOMBRE_ROBOTS_MAX);
+   nombreRobots = saisie(MSG_SAISIE_NOMBRE_ROBOTS, MSG_ERREUR, NOMBRE_ROBOTS_MIN, NOMBRE_ROBOTS_MAX);
 
+   // Création des positions de départ des robots
+   vector<Position> positionsDeDepart = vector<Position>((size_t) nombreRobots);
+   Position::unique(positionsDeDepart.begin(), positionsDeDepart.end(), largeurTerrain, hauteurTerrain);
+
+   // Création des robots et attribution des positions de départ uniques
    vector<Robot> robots = vector<Robot>();
    robots.reserve((size_t) nombreRobots);
-
    for (size_t i = 0; i < (size_t) nombreRobots; ++i) {
-      robots.push_back(Robot(Position::random(largeurTerrain, hauteurTerrain)));
+      robots.push_back(Robot(positionsDeDepart[i]));
    }
 
    Terrain terrain(largeurTerrain, hauteurTerrain, robots);
 
+   // Le programme se termine lorsqu'un seul robot est en vie
    while(robots.size() > 1) {
       terrain.afficher();
       terrain.afficherEvenements();

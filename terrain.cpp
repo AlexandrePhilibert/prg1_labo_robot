@@ -19,24 +19,13 @@ using namespace std;
 
 Terrain::Terrain(int largeur, int hauteur, const vector<Robot>& robots) : largeur(largeur), hauteur(hauteur), robots(robots) {
    evenements = stringstream();
-
-   positionnerRobots();
-}
-
-void Terrain::positionnerRobots() {
-   vector<Position> positionsDeDepart = vector<Position>();
-   positionsDeDepart.reserve(robots.size());
-
-   for (size_t i = 0; i < robots.size(); ++i) {
-      // TODO Gérer le cas ou 2 positions sont égales
-      positionsDeDepart.push_back(Position::random(largeur, hauteur));
-   }
 }
 
 void Terrain::afficher() const {
    // Affiche le bord supérieur du terrain
    cout << string((size_t) this->largeur + 2, '-') << endl;
 
+   // Affichage des lignes du terrain
    for (size_t y = 0; y < (size_t) hauteur; ++y) {
       cout << "|";
       for (size_t x = 0; x < (size_t) largeur; ++x) {
@@ -99,6 +88,7 @@ void Terrain::combatsRobots() {
 
    // Compare si les positions de 2 robots sont identiques, dans ce cas, le deuxième robot du vecteur
    // ayant la même position est supprimé (il a perdu le combat).
+   // TODO: Gérer le cas ou plus de deux robots sont à la même position ?
    for (vector<Robot>::const_iterator robot1 = robots.begin(); robot1 != robots.end(); ++robot1) {
       for (vector<Robot>::const_iterator robot2 = robot1 + 1; robot2 != robots.end(); ++robot2) {
          if (robot1->getPosition() == robot2->getPosition()) {
@@ -106,6 +96,9 @@ void Terrain::combatsRobots() {
             evenements << robot1->getId() << " killed " << robot2->getId() << endl;
 
             robots.erase(robot2, robot2 + 1);
+            // Le vecteur de robots ne fait que de décroitre lors de l'exécution, il n'est pas nécessaire de garder de
+            // l'espace dans ce vecteur.
+            robots.shrink_to_fit();
          }
       }
    }

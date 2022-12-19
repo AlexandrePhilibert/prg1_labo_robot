@@ -2,7 +2,7 @@
 // Fichier        : position.cpp
 // Auteur(s)      : POLLIEN Lionel & PHILIBERT Alexandre
 // Date           : 2022-12-12
-// But            : Représentation d'une position sur un plan x y.
+// But            : Représentation d'une position sur un plan x et y.
 // Modifications  : NIL
 // Remarque(s)    :
 // Compilateur    : g++ 11.2.0
@@ -22,6 +22,16 @@ int Position::getX() const {
 
 int Position::getY() const {
    return this->y;
+}
+
+void Position::unique(vector<Position>::iterator debut, vector<Position>::iterator fin, int xMax, int yMax) {
+   for (vector<Position>::iterator it = debut; debut != fin; ++it) {
+      Position position = Position::random(xMax, yMax);
+
+      if (find(debut, fin, position) == fin) {
+         *it = position;
+      }
+   }
 }
 
 Position Position::random(int xMax, int yMax) {
@@ -51,5 +61,5 @@ Position Position::operator+(Direction direction) const {
 }
 
 bool Position::operator==(const Position &position) const {
-   return position.getX() == x && position.getY() == y;
+   return position.x == x && position.y == y;
 }
