@@ -14,21 +14,21 @@
 
 #include <vector>
 #include <sstream>
+#include <ostream>
 
 #include "robot.h"
 
-// TODO: Ajouter constante pour largeur et hauteur
 class Terrain {
+   friend std::ostream& operator<<(std::ostream& os, const Terrain& terrain);
 public:
-   Terrain(int largeur = 10, int hauteur = 10, const std::vector<Robot>& robots = std::vector<Robot>());
+   Terrain(std::vector<Robot>& robots, int largeur = 10, int hauteur = 10);
 
-   void afficher() const;
    void afficherEvenements() const;
    void prochainTour();
 
 private:
-   int largeur;
-   int hauteur;
+   const int largeur;
+   const int hauteur;
 
    /**
     * Les événements sont des actions qui ont été réalisées sur le terrain, par. ex un robot tuant un autre robot
@@ -36,8 +36,6 @@ private:
    std::stringstream evenements;
 
    void afficherCase(const Position& position) const;
-   void combatsRobots();
-   void deplacerRobots();
 
    /**
     * @param position La position à laquelle un robot est cherchés
@@ -47,8 +45,12 @@ private:
     */
    std::vector<Robot>::const_iterator robotEnPositon(const Position& position) const;
 
-   std::vector<Robot> robots;
+   std::vector<Robot>& robots;
+
+   static const char BORD_HORIZONTAL;
+   static const char BORD_VERTICAL;
 };
 
+std::ostream& operator<<(std::ostream& os, const Terrain& terrain);
 
 #endif //PRG1_LABO_ROBOT_TERRAIN_H

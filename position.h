@@ -14,13 +14,15 @@
 
 #include <vector>
 
+// TODO: Mettre en propriété de la classe Position ?
 enum class Direction { HAUT, DROITE, BAS, GAUCHE };
+
+Direction& operator++(Direction& direction);
 
 class Position {
 public:
-   Position(int x = 0, int y = 0);
+   explicit Position(int x = 0, int y = 0);
 
-   // TODO: Garder les getters / setters même si pas utilisé ?
    int getX() const;
    int getY() const;
 

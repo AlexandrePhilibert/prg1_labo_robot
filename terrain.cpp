@@ -14,34 +14,22 @@
 #include <string>
 
 #include "terrain.h"
+#include "robot.h"
+#include "annexe.h"
 
 using namespace std;
 
-Terrain::Terrain(int largeur, int hauteur, const vector<Robot>& robots) : largeur(largeur),
-                                                                          hauteur(hauteur),
-                                                                          robots(robots) {
+const char Terrain::BORD_HORIZONTAL = '-';
+const char Terrain::BORD_VERTICAL   = '|';
+
+Terrain::Terrain(vector<Robot>& robots, int largeur, int hauteur) : largeur(largeur),
+                                                                    hauteur(hauteur),
+                                                                    robots(robots) {
    evenements = stringstream();
 }
 
-void Terrain::afficher() const {
-   // Affiche le bord supérieur du terrain
-   cout << string((size_t) this->largeur + 2, '-') << endl;
-
-   // Affichage des lignes du terrain
-   for (size_t y = 0; y < (size_t) hauteur; ++y) {
-      cout << "|";
-      for (size_t x = 0; x < (size_t) largeur; ++x) {
-         afficherCase(Position((int) x, (int) y));
-      }
-      cout << "|" << endl;
-   }
-
-   // Affiche le bord inférieur du terrain
-   cout << string((size_t) this->largeur + 2, '-') << endl;
-}
-
 void Terrain::afficherEvenements() const {
-   cout << endl << evenements.str() << endl;
+   cout << evenements.str() << endl;
 }
 
 vector<Robot>::const_iterator Terrain::robotEnPositon(const Position &position) const {
@@ -51,7 +39,7 @@ vector<Robot>::const_iterator Terrain::robotEnPositon(const Position &position) 
       }
    }
 
-   return robots.end();
+   return robots.cend();
 }
 
 void Terrain::afficherCase(const Position& position) const {
@@ -65,21 +53,6 @@ void Terrain::afficherCase(const Position& position) const {
 }
 
 void Terrain::prochainTour() {
-   // Un tour est constitué de deux étapes :
-   // - Le déplacement des robots.
-   // - Les combats de robots se situant sur la même position.
-   this->deplacerRobots();
-   this->combatsRobots();
-}
-
-void Terrain::deplacerRobots() {
-   for (Robot& robot : robots) {
-      // TODO: Tirer une direction aléatoire
-      robot.deplacer((Direction) 1);
-   }
-}
-
-void Terrain::combatsRobots() {
    // Aucun combatsRobots n'est possible s'il y a moins de 2 robots
    if (robots.size() < 2) {
       return;
@@ -88,20 +61,50 @@ void Terrain::combatsRobots() {
    // Mélange l'ordre des robots pour une égalité des chances de victoire de chaque robot lors d'un combatsRobots
    shuffle(robots.begin(), robots.end(), random_device());
 
-   // Compare si les positions de 2 robots sont identiques, dans ce cas, le deuxième robot du vecteur
-   // ayant la même position est supprimé (il a perdu le combat).
-   // TODO: Gérer le cas ou plus de deux robots sont à la même position ?
-   for (vector<Robot>::const_iterator robot1 = robots.begin(); robot1 != robots.end(); ++robot1) {
-      for (vector<Robot>::const_iterator robot2 = robot1 + 1; robot2 != robots.end(); ++robot2) {
-         if (robot1->getPosition() == robot2->getPosition()) {
-            // Ajout du résultat du combat au flux d'événements
-            evenements << robot1->getId() << " killed " << robot2->getId() << endl;
+   for (Robot& robot : robots) {
+      // Créer une liste des directions possible pour le robot
+      vector<Direction> directionsPossibles = vector<Direction>();
+      for (Direction direction = Direction::HAUT; direction <= Direction::GAUCHE; ++direction) {
+         Position positionConsideree = robot.getPosition() + direction;
 
-            robots.erase(robot2, robot2 + 1);
-            // Le vecteur de robots ne fait que de décroitre lors de l'exécution, il n'est pas nécessaire de garder de
-            // l'espace dans ce vecteur.
-            robots.shrink_to_fit();
+         if (positionConsideree.getX() >= 0 && positionConsideree.getX() < largeur &&
+             positionConsideree.getY() >= 0 && positionConsideree.getY() < hauteur) {
+            directionsPossibles.push_back(direction);
+         }
+      }
+
+      int valeurRandom = random(0, (int) directionsPossibles.size() - 1);
+      // Déplace le robot dans une des directions possibles
+      Direction directionChoisie = directionsPossibles[(size_t) valeurRandom];
+      robot.deplacer(directionChoisie);
+
+      for (vector<Robot>::iterator it = robots.begin(); it != robots.end(); ) {
+         if (robot != *it && robot.getPosition() == (it->getPosition() + directionChoisie)) {
+            evenements << robot.getId() << " killed " << it->getId() << endl;
+
+            robots.erase(it);
+         } else {
+            ++it;
          }
       }
    }
 }
+
+ostream& operator<<(ostream& os, const Terrain& terrain) {
+   // Affiche le bord supérieur du terrain
+   os << string((size_t) terrain.largeur + 2, Terrain::BORD_HORIZONTAL) << endl;
+
+   // Affichage des lignes du terrain
+   for (size_t y = 0; y < (size_t) terrain.hauteur; ++y) {
+      os << Terrain::BORD_VERTICAL;
+      for (size_t x = 0; x < (size_t) terrain.largeur; ++x) {
+         terrain.afficherCase(Position((int) x, (int) y));
+      }
+      os << Terrain::BORD_VERTICAL << endl;
+   }
+
+   // Affiche le bord inférieur du terrain
+   os << string((size_t) terrain.largeur + 2, Terrain::BORD_HORIZONTAL) << endl;
+
+   return os;
+};

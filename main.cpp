@@ -44,6 +44,9 @@ int main() {
    const int NOMBRE_ROBOTS_MIN = 0;
    // Le nombre de robots maximum qui pourra être choisi par l'utilisateur
    const int NOMBRE_ROBOTS_MAX = 9;
+   // Temps d'attente entre chaque tour
+   // TODO: Le droit de déclarer ça ?
+   const chrono::duration TEMPS_ENTRE_TOURS = 20ms;
 
    // La largeur du terrain saisie par l'utilisateur
    int largeurTerrain;
@@ -64,7 +67,7 @@ int main() {
 
    // Création des positions de départ des robots
    vector<Position> positionsDeDepart = vector<Position>((size_t) nombreRobots);
-   Position::unique(positionsDeDepart.begin(), positionsDeDepart.end(), largeurTerrain, hauteurTerrain);
+   Position::unique(positionsDeDepart.begin(), positionsDeDepart.end(), largeurTerrain - 1, hauteurTerrain - 1);
 
    // Création des robots et attribution des positions de départ uniques
    vector<Robot> robots = vector<Robot>();
@@ -73,25 +76,29 @@ int main() {
       robots.push_back(Robot(positionsDeDepart[i]));
    }
 
-   Terrain terrain(largeurTerrain, hauteurTerrain, robots);
+   Terrain terrain(robots, largeurTerrain, hauteurTerrain);
 
    // Le programme se termine lorsqu'un seul robot est en vie
    while(robots.size() > 1) {
-      terrain.afficher();
+      // Repris du corrigé présenté en classe du labo tondeuse.
+      #ifdef _WIN32
+            system("cls");
+      #else
+            system("clear");
+      #endif
+
+      // Déplace les robots et effectue les combats
+      terrain.prochainTour();
+
+      // Affichage du terrain et des événements
+      cout << terrain << endl;
       terrain.afficherEvenements();
 
       // Pause l'exécution pendant 500 millisecondes
-      this_thread::sleep_for(500ms);
-
-      // Repris du corrigé présenté en classe du labo tondeuse.
-      #ifdef _WIN32
-         system("cls");
-      #else
-         system("clear");
-      #endif
-
-      terrain.prochainTour();
+      this_thread::sleep_for(TEMPS_ENTRE_TOURS);
    }
+
+   // TODO: Indiquer quel robot et le gagnant ?
 
    cout << "Pressez ENTER pour quitter";
    cin.ignore(numeric_limits<streamsize>::max(), '\n');

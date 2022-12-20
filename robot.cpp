@@ -10,6 +10,8 @@
 // -----------------------------------------------------------------------------------------------
 
 #include "robot.h"
+#include "terrain.h"
+#include "position.h"
 
 using namespace std;
 
@@ -31,4 +33,13 @@ const Position& Robot::getPosition() const {
 void Robot::deplacer(Direction direction) {
    // TODO: Utiliser +=
    this->position = position + direction;
+}
+
+bool Robot::operator==(const Robot &robot) const {
+   return this->id == robot.id;
+}
+
+
+bool Robot::operator!=(const Robot &robot) const {
+   return !(*this == robot);
 }

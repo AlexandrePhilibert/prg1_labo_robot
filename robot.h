@@ -18,7 +18,7 @@
 
 class Robot {
 public :
-   Robot(const Position& position = Position(0, 0));
+   explicit Robot(const Position& position = Position(0, 0));
 
    /**
     * @throws NIL
@@ -30,6 +30,9 @@ public :
    void deplacer(Direction direction);
 
    static int prochainId;
+
+   bool operator==(const Robot& robot) const;
+   bool operator!=(const Robot& robot) const;
 
 private:
    int id;
