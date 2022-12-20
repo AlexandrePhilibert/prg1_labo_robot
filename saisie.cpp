@@ -1,7 +1,7 @@
 // -----------------------------------------------------------------------------------------------
 // Fichier        : saisie.cpp
 // Auteur(s)      : POLLIEN Lionel & PHILIBERT Alexandre
-// Date           : 2022-12-12
+// Date           : 2022-12-20
 // But            : Fonctions responsables de toute la saisie utilisateur, gestion
 // 					  du flux, répétition ou fin du programme.
 // Modifications  : NIL

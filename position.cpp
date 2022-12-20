@@ -1,7 +1,7 @@
 // -----------------------------------------------------------------------------------------------
 // Fichier        : position.cpp
 // Auteur(s)      : POLLIEN Lionel & PHILIBERT Alexandre
-// Date           : 2022-12-12
+// Date           : 2022-12-20
 // But            : Représentation d'une position sur un plan x et y.
 // Modifications  : NIL
 // Remarque(s)    :
@@ -38,6 +38,10 @@ Position Position::random(int xMax, int yMax) {
    return Position(::random(0, xMax), ::random(0, yMax));
 }
 
+// -----------------------------------------------------------------------------------------------
+// region Opérateurs
+// -----------------------------------------------------------------------------------------------
+
 Position Position::operator+(Direction direction) const {
    int x = this->x;
    int y = this->y;
@@ -60,6 +64,11 @@ Position Position::operator+(Direction direction) const {
    return Position(x, y);
 }
 
+Position operator+(Direction direction, const Position& position) {
+   return position + direction;
+}
+
+
 bool Position::operator==(const Position &position) const {
    return position.x == x && position.y == y;
 }
@@ -68,3 +77,7 @@ Direction& operator++(Direction& direction) {
    direction = (Direction) ((int) direction + 1);
    return direction;
 }
+
+// -----------------------------------------------------------------------------------------------
+// endregion Opérateurs
+// -----------------------------------------------------------------------------------------------

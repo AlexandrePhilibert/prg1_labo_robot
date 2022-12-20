@@ -1,8 +1,8 @@
 // -----------------------------------------------------------------------------------------------
 // Fichier        : robot.cpp
 // Auteur(s)      : POLLIEN Lionel & PHILIBERT Alexandre
-// Date           : 2022-11-22
-// But            :
+// Date           : 2022-12-20
+// But            : Représentation d'un robot possédant un identifiant ainsi qu'une position
 // Modifications  : NIL
 // Remarque(s)    :
 // Compilateur    : g++ 11.2.0
@@ -20,17 +20,20 @@ class Robot {
 public :
    explicit Robot(const Position& position = Position(0, 0));
 
-   /**
-    * @throws NIL
-    * @return l'id du robot
-    */
    int getId() const;
    const Position& getPosition() const;
 
+   /**
+    *  Déplace le robot dans une direction donnée
+    *
+    * @param direction Direction dans laquelle le robot va réaliser son déplacement.
+    * @throws NIL
+    * @return void
+    */
    void deplacer(Direction direction);
 
    static int prochainId;
-
+   
    bool operator==(const Robot& robot) const;
    bool operator!=(const Robot& robot) const;
 

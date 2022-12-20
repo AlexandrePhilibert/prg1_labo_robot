@@ -1,7 +1,7 @@
 // -----------------------------------------------------------------------------------------------
 // Fichier        : position.h
 // Auteur(s)      : POLLIEN Lionel & PHILIBERT Alexandre
-// Date           : 2022-11-22
+// Date           : 2022-12-20
 // But            : Représentation d'une position sur un plan x et y.
 // Modifications  : NIL
 // Remarque(s)    :
@@ -14,10 +14,7 @@
 
 #include <vector>
 
-// TODO: Mettre en propriété de la classe Position ?
 enum class Direction { HAUT, DROITE, BAS, GAUCHE };
-
-Direction& operator++(Direction& direction);
 
 class Position {
 public:
@@ -49,13 +46,14 @@ public:
    static void unique(std::vector<Position>::iterator debut, std::vector<Position>::iterator fin, int xMax, int yMax);
 
    bool operator==(const Position& position) const;
-
-   // TODO: Ajouter l'opérateur dans l'autre sense (direction + position)
    Position operator+(Direction direction) const;
 
 private:
    int x;
    int y;
 };
+
+Position operator+(Direction direction, const Position& position);
+Direction& operator++(Direction& direction);
 
 #endif //PRG1_LABO_ROBOT_POSITION_H

@@ -1,7 +1,7 @@
 // -----------------------------------------------------------------------------------------------
 // Fichier        : main.cpp
 // Auteur(s)      : POLLIEN Lionel & PHILIBERT Alexandre
-// Date           : 2022-11-22
+// Date           : 2022-12-20
 // But            : Ce programme demande à l'utilisateur de saisir la largeur et hauteur d'un
 //                  terrain, ainsi qu'un nombre de robots. Ces robots vont ensuite se déplacer sur
 //                  le terrain et se battre. Le programme s'arrête lorsqu'il n'y a plus qu'un seul
@@ -12,11 +12,11 @@
 // Standard C++   : C++ 20
 // -----------------------------------------------------------------------------------------------
 
-#include <cstdlib>
-#include <limits>
-#include <iostream>
-#include <vector>
-#include <thread>  // this_thread::sleep_for()
+#include <cstdlib>  // EXIT_SUCCESS
+#include <limits>   // cin.ignore
+#include <iostream> // cin & cout
+#include <vector>   // vecteurs de robot
+#include <thread>   // this_thread::sleep_for()
 
 #include "saisie.h"
 #include "terrain.h"
@@ -45,8 +45,7 @@ int main() {
    // Le nombre de robots maximum qui pourra être choisi par l'utilisateur
    const int NOMBRE_ROBOTS_MAX = 10;
    // Temps d'attente entre chaque tour
-   // TODO: Le droit de déclarer ça ?
-   const chrono::duration TEMPS_ENTRE_TOURS = 500ms;
+   const chrono::duration TEMPS_ENTRE_TOUR = 500ms;
 
    // La largeur du terrain saisie par l'utilisateur
    int largeurTerrain;
@@ -94,7 +93,7 @@ int main() {
       terrain.afficherEvenements();
 
       // Pause l'exécution pendant 500 millisecondes
-      this_thread::sleep_for(TEMPS_ENTRE_TOURS);
+      this_thread::sleep_for(TEMPS_ENTRE_TOUR);
    }
 
    // TODO: Indiquer quel robot et le gagnant ?

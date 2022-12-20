@@ -1,8 +1,11 @@
 // -----------------------------------------------------------------------------------------------
 // Fichier        : terrain.cpp
 // Auteur(s)      : POLLIEN Lionel & PHILIBERT Alexandre
-// Date           : 2022-11-22
-// But            : Représentation d'un terrain sur lequel des robots combattent.
+// Date           : 2022-12-20
+// But            : Représentation d'un terrain sur lequel des robots combattent. Les robots
+//                  se déplacent d'une unité à la fois et dans une direction aléatoire. Lorsqu'un
+//                  robot prends la place d'un autre (même position), ce dernier est détruit et
+//                  quitte la partie.
 // Modifications  : NIL
 // Remarque(s)    :
 // Compilateur    : g++ 11.2.0
@@ -65,6 +68,7 @@ void Terrain::afficherEvenements() const {
 void Terrain::afficherCase(const Position& position) const {
    vector<Robot>::const_iterator robot = find_if(robots.begin(), robots.end(), RobotEnPosition(position));
 
+   // Afficher l'id du robot trouvé à la position donnée, sinon afficher une cellule vide.
    if (robot != robots.end()) {
       cout << robot->getId();
    } else {
@@ -78,6 +82,8 @@ void Terrain::deplacer(Robot& robot) {
    for (Direction direction = Direction::HAUT; direction <= Direction::GAUCHE; ++direction) {
       Position positionConsideree = robot.getPosition() + direction;
 
+      // Si la position est dans le terrain, le robot peut se déplacer à celle-ci. Nous ajoutons la direction à la liste
+      // des directions possibles.
       if (positionConsideree.getX() >= 0 && positionConsideree.getX() < largeur &&
           positionConsideree.getY() >= 0 && positionConsideree.getY() < hauteur) {
          directionsPossibles.push_back(direction);
@@ -98,6 +104,7 @@ void Terrain::prochainTour() {
       this->deplacer(robot);
 
       vector<Robot>::iterator robotATue = find_if(robots.begin(), robots.end(), RobotMemePosition(robot));
+      // Si robotATue == robots.end(), aucun robot n'as été trouvé sur la même cellule que le robot considéré
       if (robotATue != robots.end()) {
          // Ajout du combat de robot aux événements
          evenements << robot.getId() << " killed " << robotATue->getId() << endl;

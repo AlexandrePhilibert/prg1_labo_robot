@@ -1,7 +1,7 @@
 // -----------------------------------------------------------------------------------------------
 // Fichier        : annexe.cpp
 // Auteur(s)      : POLLIEN Lionel & PHILIBERT Alexandre
-// Date           : 2022-12-12
+// Date           : 2022-12-20
 // But            : Fonction permettant de générer un nombre aléatoire dans l'interval [min, max]
 // Modifications  : NIL
 // Remarque(s)    :
