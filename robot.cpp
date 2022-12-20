@@ -35,6 +35,10 @@ void Robot::deplacer(Direction direction) {
    this->position = position + direction;
 }
 
+// -----------------------------------------------------------------------------------------------
+// region Opérateurs
+// -----------------------------------------------------------------------------------------------
+
 bool Robot::operator==(const Robot &robot) const {
    return this->id == robot.id;
 }
@@ -43,3 +47,7 @@ bool Robot::operator==(const Robot &robot) const {
 bool Robot::operator!=(const Robot &robot) const {
    return !(*this == robot);
 }
+
+// -----------------------------------------------------------------------------------------------
+// region Opérateurs
+// -----------------------------------------------------------------------------------------------

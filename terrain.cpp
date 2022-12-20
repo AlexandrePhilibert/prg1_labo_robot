@@ -22,7 +22,7 @@
 
 using namespace std;
 
-const char Terrain::CELLULE_VIDE = ' ';
+const char Terrain::CELLULE_VIDE    = ' ';
 const char Terrain::BORD_HORIZONTAL = '-';
 const char Terrain::BORD_VERTICAL   = '|';
 

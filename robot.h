@@ -12,12 +12,10 @@
 #ifndef PRG1_LABO_ROBOT_ROBOT_H
 #define PRG1_LABO_ROBOT_ROBOT_H
 
-#include <vector>
-
 #include "position.h"
 
 class Robot {
-public :
+public:
    explicit Robot(const Position& position = Position(0, 0));
 
    int getId() const;
@@ -32,8 +30,11 @@ public :
     */
    void deplacer(Direction direction);
 
+   /**
+    * Prochain identifiant qui sera assigné à un robot.
+    */
    static int prochainId;
-   
+
    bool operator==(const Robot& robot) const;
    bool operator!=(const Robot& robot) const;
 
