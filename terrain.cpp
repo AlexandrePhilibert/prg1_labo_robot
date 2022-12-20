@@ -19,8 +19,38 @@
 
 using namespace std;
 
+const char Terrain::CELLULE_VIDE = ' ';
 const char Terrain::BORD_HORIZONTAL = '-';
 const char Terrain::BORD_VERTICAL   = '|';
+
+// -----------------------------------------------------------------------------------------------
+// region Foncteurs
+// -----------------------------------------------------------------------------------------------
+
+class RobotMemePosition {
+public:
+   RobotMemePosition(const Robot& robot) : robot(robot) {};
+
+   bool operator()(const Robot& robot) const {
+      return this->robot != robot && this->robot.getPosition() == robot.getPosition();
+   }
+private:
+   const Robot& robot;
+};
+
+class RobotEnPosition {
+public:
+   RobotEnPosition(const Position& position): position(position) {};
+   bool operator() (const Robot& robot) {
+      return robot.getPosition() == position;
+   }
+private:
+   const Position& position;
+};
+
+// -----------------------------------------------------------------------------------------------
+// endregion Foncteurs
+// -----------------------------------------------------------------------------------------------
 
 Terrain::Terrain(vector<Robot>& robots, int largeur, int hauteur) : largeur(largeur),
                                                                     hauteur(hauteur),
@@ -32,63 +62,55 @@ void Terrain::afficherEvenements() const {
    cout << evenements.str() << endl;
 }
 
-vector<Robot>::const_iterator Terrain::robotEnPositon(const Position &position) const {
-   for (vector<Robot>::const_iterator robot = robots.begin(); robot != robots.end(); ++robot) {
-      if (robot->getPosition() == position) {
-         return robot;
-      }
-   }
-
-   return robots.cend();
-}
-
 void Terrain::afficherCase(const Position& position) const {
-   vector<Robot>::const_iterator robot = robotEnPositon(position);
+   vector<Robot>::const_iterator robot = find_if(robots.begin(), robots.end(), RobotEnPosition(position));
 
    if (robot != robots.end()) {
       cout << robot->getId();
    } else {
-      cout << " ";
+      cout << Terrain::CELLULE_VIDE;
    }
 }
 
-void Terrain::prochainTour() {
-   // Aucun combatsRobots n'est possible s'il y a moins de 2 robots
-   if (robots.size() < 2) {
-      return;
+void Terrain::deplacer(Robot& robot) {
+   // Créer une liste des directions possible pour le robot
+   vector<Direction> directionsPossibles = vector<Direction>();
+   for (Direction direction = Direction::HAUT; direction <= Direction::GAUCHE; ++direction) {
+      Position positionConsideree = robot.getPosition() + direction;
+
+      if (positionConsideree.getX() >= 0 && positionConsideree.getX() < largeur &&
+          positionConsideree.getY() >= 0 && positionConsideree.getY() < hauteur) {
+         directionsPossibles.push_back(direction);
+      }
    }
 
+   int indexAleatoire = random(0, (int) directionsPossibles.size() - 1);
+   // Déplace le robot dans une des directions possibles
+   Direction directionChoisie = directionsPossibles[(size_t) indexAleatoire];
+   robot.deplacer(directionChoisie);
+}
+
+void Terrain::prochainTour() {
    // Mélange l'ordre des robots pour une égalité des chances de victoire de chaque robot lors d'un combatsRobots
    shuffle(robots.begin(), robots.end(), random_device());
 
    for (Robot& robot : robots) {
-      // Créer une liste des directions possible pour le robot
-      vector<Direction> directionsPossibles = vector<Direction>();
-      for (Direction direction = Direction::HAUT; direction <= Direction::GAUCHE; ++direction) {
-         Position positionConsideree = robot.getPosition() + direction;
+      this->deplacer(robot);
 
-         if (positionConsideree.getX() >= 0 && positionConsideree.getX() < largeur &&
-             positionConsideree.getY() >= 0 && positionConsideree.getY() < hauteur) {
-            directionsPossibles.push_back(direction);
-         }
-      }
+      vector<Robot>::iterator robotATue = find_if(robots.begin(), robots.end(), RobotMemePosition(robot));
+      if (robotATue != robots.end()) {
+         // Ajout du combat de robot aux événements
+         evenements << robot.getId() << " killed " << robotATue->getId() << endl;
 
-      int valeurRandom = random(0, (int) directionsPossibles.size() - 1);
-      // Déplace le robot dans une des directions possibles
-      Direction directionChoisie = directionsPossibles[(size_t) valeurRandom];
-      robot.deplacer(directionChoisie);
-
-      for (vector<Robot>::iterator it = robots.begin(); it != robots.end(); ) {
-         if (robot != *it && robot.getPosition() == (it->getPosition() + directionChoisie)) {
-            evenements << robot.getId() << " killed " << it->getId() << endl;
-
-            robots.erase(it);
-         } else {
-            ++it;
-         }
+         // Suppression du robot tué de la liste des robots
+         robots.erase(robotATue);
       }
    }
 }
+
+// -----------------------------------------------------------------------------------------------
+// region Opérateurs
+// -----------------------------------------------------------------------------------------------
 
 ostream& operator<<(ostream& os, const Terrain& terrain) {
    // Affiche le bord supérieur du terrain
@@ -108,3 +130,7 @@ ostream& operator<<(ostream& os, const Terrain& terrain) {
 
    return os;
 };
+
+// -----------------------------------------------------------------------------------------------
+// endregion Opérateurs
+// -----------------------------------------------------------------------------------------------

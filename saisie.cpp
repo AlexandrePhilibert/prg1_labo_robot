@@ -19,6 +19,7 @@
 using namespace std;
 
 const int LARGEUR_MESSAGE_INVITE = 8;
+const int LARGEUR_ESPACEMENT = 6;
 
 int saisie(const string& msgInvite,
            const string& msgErreur,
@@ -30,7 +31,9 @@ int saisie(const string& msgInvite,
 
    do {
       // saisie et vérification
-      cout <<  msgInvite << setw(LARGEUR_MESSAGE_INVITE) << " [" << min << ".." << max << "] : ";
+      cout << left  << setw(LARGEUR_MESSAGE_INVITE) << msgInvite
+           << right << setw(LARGEUR_ESPACEMENT)     << " [" << min << ".." << max << "] : ";
+
       erreur = not(cin >> saisie) or saisie < min or saisie > max;
 
       // gestion du flux

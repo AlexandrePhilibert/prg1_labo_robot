@@ -41,12 +41,12 @@ int main() {
    // La hauteur de terrain maximum qui pourra être choisi par l'utilisateur
    const int HAUTEUR_TERRAIN_MAX = 1000;
    // Le nombre de robots minimum qui pourra être choisi par l'utilisateur
-   const int NOMBRE_ROBOTS_MIN = 0;
+   const int NOMBRE_ROBOTS_MIN = 1;
    // Le nombre de robots maximum qui pourra être choisi par l'utilisateur
-   const int NOMBRE_ROBOTS_MAX = 9;
+   const int NOMBRE_ROBOTS_MAX = 10;
    // Temps d'attente entre chaque tour
    // TODO: Le droit de déclarer ça ?
-   const chrono::duration TEMPS_ENTRE_TOURS = 20ms;
+   const chrono::duration TEMPS_ENTRE_TOURS = 500ms;
 
    // La largeur du terrain saisie par l'utilisateur
    int largeurTerrain;
@@ -55,8 +55,7 @@ int main() {
    // Le nombre de robots saisi par l'utilisateur
    int nombreRobots;
 
-   // TODO: Description du programme
-   cout << "ce programme ..." << endl;
+   cout << "ce programme vous permet de créer un terrain sur lequel des robots vont s'affronter" << endl << endl;
 
    // Saisie de la largeur du terrain
    largeurTerrain = saisie(MSG_SAISIE_LARGEUR, MSG_ERREUR, LARGEUR_TERRAIN_MIN, LARGEUR_TERRAIN_MAX);

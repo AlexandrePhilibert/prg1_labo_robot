@@ -36,17 +36,11 @@ private:
    std::stringstream evenements;
 
    void afficherCase(const Position& position) const;
-
-   /**
-    * @param position La position à laquelle un robot est cherchés
-    * @return Un itérateur constant contenant un robot si un robot a été trouvé à la position donnée,
-    * sinon retourne l'itérateur de fin du vecteur de robots
-    * @throws NIL
-    */
-   std::vector<Robot>::const_iterator robotEnPositon(const Position& position) const;
+   void deplacer(Robot& robot);
 
    std::vector<Robot>& robots;
 
+   static const char CELLULE_VIDE;
    static const char BORD_HORIZONTAL;
    static const char BORD_VERTICAL;
 };
